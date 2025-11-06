@@ -3,6 +3,7 @@
 mod credits;
 mod main;
 mod pause;
+mod save_game;
 mod settings;
 
 use bevy::prelude::*;
@@ -13,6 +14,7 @@ pub(super) fn plugin(app: &mut App) {
     app.add_plugins((
         credits::plugin,
         main::plugin,
+        save_game::plugin,
         settings::plugin,
         pause::plugin,
     ));
@@ -23,6 +25,7 @@ pub enum Menu {
     #[default]
     None,
     Main,
+    SaveGame,
     Credits,
     Settings,
     Pause,
