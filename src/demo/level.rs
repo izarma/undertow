@@ -2,7 +2,7 @@
 
 use bevy::prelude::*;
 
-use crate::{asset_tracking::LoadResource, screens::Screen};
+use crate::{asset_tracking::LoadResource, audio::music, screens::Screen};
 
 pub(super) fn plugin(app: &mut App) {
     app.load_resource::<LevelAssets>();
@@ -40,7 +40,13 @@ pub fn spawn_level(mut commands: Commands, level_assets: Res<LevelAssets>) {
         Transform::default(),
         Visibility::default(),
         DespawnOnExit(Screen::Gameplay),
-        children![scene(&level_assets)],
+        children![
+            scene(&level_assets),
+            (
+                Name::new("Gameplay Music"),
+                music(level_assets.music.clone())
+            )
+        ],
     ));
 }
 

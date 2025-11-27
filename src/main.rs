@@ -8,6 +8,7 @@ mod audio;
 mod demo;
 #[cfg(feature = "dev")]
 mod dev_tools;
+mod dialogue_view;
 mod menus;
 mod screens;
 mod theme;
@@ -50,6 +51,7 @@ impl Plugin for AppPlugin {
             demo::plugin,
             #[cfg(feature = "dev")]
             dev_tools::plugin,
+            dialogue_view::plugin,
             menus::plugin,
             screens::plugin,
             theme::plugin,
@@ -72,6 +74,9 @@ impl Plugin for AppPlugin {
 
         // Spawn the main camera.
         app.add_systems(Startup, spawn_camera);
+
+        // // Save Game
+        // app.add_plugins(SavePlugins);
     }
 }
 

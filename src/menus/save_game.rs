@@ -15,7 +15,8 @@ use crate::menus::Menu;
 
 pub(super) fn plugin(app: &mut App) {
     app.add_plugins((ScrollbarPlugin, InputDispatchPlugin, TabNavigationPlugin));
-    app.add_systems(OnEnter(Menu::SaveGame), setup_game_load_ui)
+    // app.add_plugins(SavePlugin);
+    app.add_systems(OnEnter(Menu::SaveGame), (setup_game_load_ui,))
         .add_systems(
             Update,
             update_scrollbar_thumb.run_if(in_state(Menu::SaveGame)),
@@ -40,6 +41,8 @@ fn setup_game_load_ui(mut commands: Commands) {
         },
         BackgroundColor(Color::srgb(0.1, 0.9, 0.1)),
         TabGroup::default(),
+        GlobalZIndex(3),
+        DespawnOnExit(Menu::SaveGame),
         Children::spawn((Spawn(Text::new("Load Game")), Spawn(load_scroller()))),
     ));
 }

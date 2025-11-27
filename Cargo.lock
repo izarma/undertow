@@ -4985,15 +4985,6 @@ dependencies = [
  "getrandom",
  "rand",
  "tracing",
- "undertow-dialogue-view",
-]
-
-[[package]]
-name = "undertow-dialogue-view"
-version = "0.1.0"
-dependencies = [
- "bevy",
- "bevy_yarnspinner",
  "unicode-segmentation",
 ]
 
