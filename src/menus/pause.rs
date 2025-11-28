@@ -3,10 +3,7 @@
 use bevy::{input::common_conditions::input_just_pressed, prelude::*};
 
 use crate::{
-    menus::{
-        Menu,
-        main::{open_save_menu, open_settings_menu},
-    },
+    menus::{Menu, main::open_settings_menu},
     screens::Screen,
     theme::widget,
 };
@@ -27,7 +24,6 @@ fn spawn_pause_menu(mut commands: Commands) {
         children![
             widget::header("Game paused"),
             widget::button("Continue", close_menu),
-            widget::button("Load Game", open_save_menu),
             widget::button("Settings", open_settings_menu),
             widget::button("Quit to title", quit_to_title),
         ],

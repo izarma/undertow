@@ -2,9 +2,9 @@ use bevy::prelude::*;
 use bevy_yarnspinner::prelude::{YarnFileSource, YarnProject, YarnSpinnerPlugin};
 
 use crate::{
-    PausableSystems, Pause,
+    Pause,
     demo::level::{LevelAssets, SceneBackground},
-    dialogue_view::YarnSpinnerDialogueViewSystemSet,
+    dialogue_view::{self, YarnSpinnerDialogueViewSystemSet},
     screens::Screen,
 };
 
@@ -19,8 +19,9 @@ pub(super) fn plugin(app: &mut App) {
     app.add_systems(
         OnEnter(Screen::Gameplay),
         // Spawn the dialogue runner once the Yarn project has finished compiling
-        spawn_dialogue_runner.run_if(resource_added::<YarnProject>),
+        spawn_dialogue_runner.run_if(resource_exists::<YarnProject>),
     );
+    app.add_systems(OnExit(Screen::Gameplay), dialogue_view::cleanup_system);
 }
 
 fn spawn_dialogue_runner(mut commands: Commands, project: Res<YarnProject>) {
@@ -31,7 +32,7 @@ fn spawn_dialogue_runner(mut commands: Commands, project: Res<YarnProject>) {
         .add_command("next_scene", commands.register_system(next_scene));
     // Immediately start showing the dialogue to the player
     dialogue_runner.start_node("Shore");
-    commands.spawn(dialogue_runner);
+    commands.spawn((dialogue_runner, DespawnOnExit(Screen::Gameplay)));
     info!("Dialogue runner spawned");
 }
 

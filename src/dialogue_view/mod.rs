@@ -2,6 +2,7 @@ use bevy::prelude::*;
 use bevy_yarnspinner::prelude::YarnSpinnerPlugin;
 
 mod assets;
+mod history;
 mod option_selection;
 mod setup;
 mod typewriter;
@@ -21,5 +22,20 @@ pub(super) fn plugin(app: &mut App) {
         .add_plugins(setup::ui_setup_plugin)
         .add_plugins(updating::ui_updating_plugin)
         .add_plugins(typewriter::typewriter_plugin)
-        .add_plugins(option_selection::option_selection_plugin);
+        .add_plugins(option_selection::option_selection_plugin)
+        .add_plugins(history::plugin);
+}
+
+pub fn cleanup_system(
+    mut commands: Commands,
+    mut root_visibility: Single<&mut Visibility, With<setup::UiRootNode>>,
+) {
+    // 1. Remove the typewriter state so it doesn't resume typing old text next time
+    commands.remove_resource::<typewriter::Typewriter>();
+
+    // 2. Remove any pending options
+    commands.remove_resource::<option_selection::OptionSelection>();
+
+    // 3. Force hide the UI root immediately
+    **root_visibility = Visibility::Hidden;
 }

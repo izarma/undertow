@@ -102,5 +102,13 @@ struct Pause(pub bool);
 struct PausableSystems;
 
 fn spawn_camera(mut commands: Commands) {
-    commands.spawn((Name::new("Camera"), Camera2d));
+    let main_camera = Camera2d::default();
+    let projection = Projection::Orthographic(OrthographicProjection {
+        scaling_mode: bevy::camera::ScalingMode::AutoMin {
+            min_width: (1920.0),
+            min_height: (1080.0),
+        },
+        ..OrthographicProjection::default_2d()
+    });
+    commands.spawn((Name::new("Camera"), main_camera, projection));
 }

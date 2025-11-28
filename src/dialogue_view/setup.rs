@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_yarnspinner::prelude::{DialogueOption, OptionId};
 
-use crate::dialogue_view::assets::image_handle;
+use crate::{dialogue_view::assets::image_handle, theme::palette::BUTTON_TEXT};
 
 pub(super) fn ui_setup_plugin(app: &mut App) {
     app.add_systems(Startup, setup);
@@ -118,9 +118,11 @@ fn setup(mut commands: Commands) {
             parent.spawn((
                 fmt_name("HistoryButton"),
                 Text::new("History"),
-                text_style::name(),
+                TextFont::from_font_size(30.0),
+                TextColor(BUTTON_TEXT),
                 Node {
                     align_self: AlignSelf::End,
+                    width: Val::Px(130.0),
                     margin: UiRect {
                         right: Val::Px(TEXT_BORDER_HORIZONTAL / 2.0),
                         bottom: Val::Px(-2.0),
@@ -128,6 +130,7 @@ fn setup(mut commands: Commands) {
                     },
                     ..default()
                 },
+                BorderColor::DEFAULT,
                 ZIndex(1),
                 DialogueHistoryButtonNode,
                 Visibility::Hidden,
@@ -158,7 +161,7 @@ fn setup(mut commands: Commands) {
         });
 }
 
-fn fmt_name(name: &str) -> Name {
+pub(crate) fn fmt_name(name: &str) -> Name {
     Name::new(format!("Yarn Spinner example dialogue view node: {name}"))
 }
 
@@ -288,3 +291,11 @@ mod text_style {
         )
     }
 }
+
+// fn force_hide_dialogue(
+//     mut commands: Commands,
+//     mut root: Single<&mut Visibility, With<UiRootNode>>,
+// ) {
+//     **root = Visibility::Hidden;
+//     commands.remove_resource::<Typewriter>(); // Stop the typewriter from forcing visibility back on
+// }

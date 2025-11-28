@@ -27,6 +27,7 @@ impl FromWorld for LevelAssets {
                 assets.load("images/scenes/scene2.png"),
                 assets.load("images/scenes/scene3.png"),
                 assets.load("images/scenes/scene4.png"),
+                assets.load("images/scenes/scene5.png"),
             ],
         }
     }
@@ -60,7 +61,7 @@ fn scene(level_assets: &LevelAssets) -> impl Bundle {
     (
         Name::new("Scene Background"),
         Sprite::from_image(level_assets.scenes[0].clone()),
-        Transform::from_scale(Vec3::splat(2.0)),
+        DespawnOnExit(Screen::Gameplay),
         SceneBackground { index: 0 },
     )
 }

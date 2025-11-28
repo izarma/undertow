@@ -2,7 +2,9 @@
 
 use bevy::{ecs::spawn::SpawnIter, input::common_conditions::input_just_pressed, prelude::*};
 
-use crate::{asset_tracking::LoadResource, audio::music, menus::Menu, theme::prelude::*};
+use crate::{
+    asset_tracking::LoadResource, audio::music, menus::Menu, screens::Screen, theme::prelude::*,
+};
 
 pub(super) fn plugin(app: &mut App) {
     app.add_systems(OnEnter(Menu::Credits), spawn_credits_menu);
@@ -77,12 +79,18 @@ fn grid(content: Vec<[&'static str; 2]>) -> impl Bundle {
     )
 }
 
-fn go_back_on_click(_: On<Pointer<Click>>, mut next_menu: ResMut<NextState<Menu>>) {
+fn go_back_on_click(
+    _: On<Pointer<Click>>,
+    mut next_menu: ResMut<NextState<Menu>>,
+    mut next_screen: ResMut<NextState<Screen>>,
+) {
     next_menu.set(Menu::Main);
+    next_screen.set(Screen::Title);
 }
 
-fn go_back(mut next_menu: ResMut<NextState<Menu>>) {
+fn go_back(mut next_menu: ResMut<NextState<Menu>>, mut next_screen: ResMut<NextState<Screen>>) {
     next_menu.set(Menu::Main);
+    next_screen.set(Screen::Title);
 }
 
 #[derive(Resource, Asset, Clone, Reflect)]

@@ -4,14 +4,15 @@ use bevy_yarnspinner::{
     prelude::{DialogueRunner, YarnSpinnerSystemSet},
 };
 
-use crate::dialogue_view::{
-    YarnSpinnerDialogueViewSystemSet,
-    option_selection::OptionSelection,
-    setup::{
-        DialogueContinueNode, DialogueHistoryButtonNode, DialogueNameNode, DialogueNode,
-        OptionsNode, UiRootNode,
+use crate::{
+    dialogue_view::{
+        YarnSpinnerDialogueViewSystemSet,
+        history::DialogueHistory,
+        option_selection::OptionSelection,
+        setup::{DialogueContinueNode, DialogueHistoryButtonNode, DialogueNameNode, UiRootNode},
+        typewriter::{self, Typewriter},
     },
-    typewriter::{self, Typewriter},
+    menus::Menu,
 };
 
 pub(super) fn ui_updating_plugin(app: &mut App) {
@@ -54,12 +55,14 @@ fn show_dialog(mut visibility: Single<&mut Visibility, With<UiRootNode>>) {
 fn dialogue_history_button(
     interaction_query: Query<&Interaction, (Changed<Interaction>, With<DialogueHistoryButtonNode>)>,
     mut visibility: Single<&mut Visibility, With<DialogueHistoryButtonNode>>,
+    mut next_menu: ResMut<NextState<Menu>>,
 ) {
     for interaction in interaction_query.iter() {
         **visibility = Visibility::Inherited;
         if *interaction == Interaction::Pressed {
             // TODO: Toggle history panel visibility
             info!("History button pressed!");
+            next_menu.set(Menu::History);
         }
     }
 }
@@ -67,9 +70,11 @@ fn dialogue_history_button(
 fn hide_dialog(
     mut root_visibility: Single<&mut Visibility, With<UiRootNode>>,
     mut dialogue_complete_events: MessageReader<DialogueCompleteEvent>,
+    mut next_menu: ResMut<NextState<Menu>>,
 ) {
     if !dialogue_complete_events.is_empty() {
         **root_visibility = Visibility::Hidden;
+        next_menu.set(Menu::Credits);
         dialogue_complete_events.clear();
     }
 }
@@ -80,17 +85,21 @@ fn present_line(
     mut typewriter: ResMut<Typewriter>,
     name_node: Single<Entity, With<DialogueNameNode>>,
     mut text_writer: TextUiWriter,
+    mut history: ResMut<DialogueHistory>,
 ) {
     for event in line_events.read() {
+        let mut line_text_hist = event.line.text.clone();
         let name = if let Some(name) = event.line.character_name() {
             speaker_change_events.write(SpeakerChangeEvent {
                 character_name: name.to_string(),
                 speaking: true,
             });
+            line_text_hist = format!("{}: {}", name, line_text_hist);
             name.to_string()
         } else {
             String::new()
         };
+        history.lines.push(line_text_hist);
         *text_writer.text(*name_node, 0) = name;
         typewriter.set_line(&event.line);
     }
@@ -110,11 +119,6 @@ fn continue_dialogue(
     mut dialogue_runners: Query<&mut DialogueRunner>,
     mut typewriter: ResMut<Typewriter>,
     option_selection: Option<Res<OptionSelection>>,
-    mut root_visibility: Single<&mut Visibility, With<UiRootNode>>,
-    mut dialogue_name_node: Single<&mut Visibility, With<DialogueNameNode>>,
-    mut dialogue_node: Single<&mut Visibility, With<DialogueNode>>,
-    mut options_node: Single<&mut Visibility, With<OptionsNode>>,
-    mut history_node: Single<&mut Visibility, With<DialogueHistoryButtonNode>>,
     mut continue_visibility: Single<
         &mut Visibility,
         (With<DialogueContinueNode>, Without<UiRootNode>),
@@ -132,11 +136,6 @@ fn continue_dialogue(
         for mut dialogue_runner in dialogue_runners.iter_mut() {
             if !dialogue_runner.is_waiting_for_option_selection() && dialogue_runner.is_running() {
                 dialogue_runner.continue_in_next_update();
-                //**root_visibility = Visibility::Hidden;
-                **options_node = Visibility::Hidden;
-                **history_node = Visibility::Hidden;
-                **dialogue_name_node = Visibility::Hidden;
-                **dialogue_node = Visibility::Hidden;
                 **continue_visibility = Visibility::Hidden;
             }
         }
