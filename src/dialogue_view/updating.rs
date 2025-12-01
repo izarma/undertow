@@ -5,6 +5,7 @@ use bevy_yarnspinner::{
 };
 
 use crate::{
+    demo::level::GameplayMusic,
     dialogue_view::{
         YarnSpinnerDialogueViewSystemSet,
         history::DialogueHistory,
@@ -71,10 +72,15 @@ fn hide_dialog(
     mut root_visibility: Single<&mut Visibility, With<UiRootNode>>,
     mut dialogue_complete_events: MessageReader<DialogueCompleteEvent>,
     mut next_menu: ResMut<NextState<Menu>>,
+    mut history: ResMut<DialogueHistory>,
+    music_query: Single<Entity, With<GameplayMusic>>,
+    mut cmd: Commands,
 ) {
     if !dialogue_complete_events.is_empty() {
         **root_visibility = Visibility::Hidden;
+        cmd.entity(music_query.entity()).despawn();
         next_menu.set(Menu::Credits);
+        history.lines.clear();
         dialogue_complete_events.clear();
     }
 }

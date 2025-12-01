@@ -59,12 +59,13 @@ fn spawn_history_menu(mut commands: Commands, history: Res<DialogueHistory>) {
             flex_direction: FlexDirection::Column,
             align_items: AlignItems::Center,
             justify_content: JustifyContent::Center,
+            row_gap: Val::Px(20.0),
             padding: UiRect::all(Val::Px(40.0)),
             ..default()
         },
         BackgroundColor(Color::BLACK.with_alpha(0.8)),
         Children::spawn(((
-            Spawn(Text::new("History")),
+            Spawn(widget::header("History")),
             Spawn(load_scroller(history)),
             Spawn(widget::button("Back", go_back_to_gameplay_on_click)),
         ),)),
@@ -89,13 +90,13 @@ fn load_scroller(history: Res<DialogueHistory>) -> impl Bundle {
                 Node {
                     display: Display::Flex,
                     flex_direction: FlexDirection::Column,
-                    justify_items: JustifyItems::Default,
+                    align_items: AlignItems::FlexStart,
                     padding: UiRect::all(px(50)),
                     overflow: Overflow::scroll_y(),
                     ..default()
                 },
                 BackgroundColor(Color::BLACK.with_alpha(0.9)),
-                ScrollPosition(Vec2::new(0.0, 10.0)),
+                ScrollPosition(Vec2::new(0.0, f32::MAX)),
             ));
             let scroll_area_id = scroll_area.id();
 
@@ -136,10 +137,10 @@ fn history_line(caption: &str) -> impl Bundle {
         Button,
         Node {
             width: Val::Percent(100.0),
-            min_height: Val::Px(50.0),
+            min_height: Val::Px(70.0),
             display: Display::Flex,
-            align_items: AlignItems::FlexStart,
-            justify_content: JustifyContent::Center,
+            align_items: AlignItems::Center,
+            justify_content: JustifyContent::FlexStart,
             padding: UiRect::all(px(10)),
             margin: UiRect::bottom(px(8)), // Space between buttons
             ..default()

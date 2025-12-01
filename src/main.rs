@@ -74,9 +74,6 @@ impl Plugin for AppPlugin {
 
         // Spawn the main camera.
         app.add_systems(Startup, spawn_camera);
-
-        // // Save Game
-        // app.add_plugins(SavePlugins);
     }
 }
 
@@ -105,8 +102,8 @@ fn spawn_camera(mut commands: Commands) {
     let main_camera = Camera2d::default();
     let projection = Projection::Orthographic(OrthographicProjection {
         scaling_mode: bevy::camera::ScalingMode::AutoMin {
-            min_width: (1920.0),
-            min_height: (1080.0),
+            min_width: (1280.0),
+            min_height: (720.0),
         },
         ..OrthographicProjection::default_2d()
     });

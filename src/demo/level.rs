@@ -15,6 +15,8 @@ pub struct LevelAssets {
     music: Handle<AudioSource>,
     #[dependency]
     pub scenes: Vec<Handle<Image>>,
+    #[dependency]
+    pub sfx: Handle<AudioSource>,
 }
 
 impl FromWorld for LevelAssets {
@@ -29,9 +31,13 @@ impl FromWorld for LevelAssets {
                 assets.load("images/scenes/scene4.png"),
                 assets.load("images/scenes/scene5.png"),
             ],
+            sfx: assets.load("audio/sound_effects/dice-grab-1.ogg"),
         }
     }
 }
+
+#[derive(Component)]
+pub(crate) struct GameplayMusic;
 
 /// A system that spawns the main level.
 pub fn spawn_level(mut commands: Commands, level_assets: Res<LevelAssets>) {
@@ -41,6 +47,7 @@ pub fn spawn_level(mut commands: Commands, level_assets: Res<LevelAssets>) {
         Transform::default(),
         Visibility::default(),
         DespawnOnExit(Screen::Gameplay),
+        GameplayMusic,
         children![
             scene(&level_assets),
             (

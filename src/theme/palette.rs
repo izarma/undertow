@@ -1,16 +1,19 @@
 use bevy::prelude::*;
 
-/// #ddd369
-pub const LABEL_TEXT: Color = Color::srgb(0.867, 0.827, 0.412);
+/// Warm paper-ink beige (#d8d4ba)
+pub const LABEL_TEXT: Color = Color::srgb(0.847, 0.831, 0.729);
 
-/// #fcfbcc
-pub const HEADER_TEXT: Color = Color::srgb(0.988, 0.984, 0.800);
+/// Soft parchment highlight (#f2f0dd)
+pub const HEADER_TEXT: Color = Color::srgb(0.949, 0.941, 0.866);
 
-/// #ececec
-pub const BUTTON_TEXT: Color = Color::srgb(0.925, 0.925, 0.925);
-/// #4666bf
-pub const BUTTON_BACKGROUND: Color = Color::srgb(0.275, 0.400, 0.750);
-/// #6299d1
-pub const BUTTON_HOVERED_BACKGROUND: Color = Color::srgb(0.384, 0.600, 0.820);
-/// #3d4999
-pub const BUTTON_PRESSED_BACKGROUND: Color = Color::srgb(0.239, 0.286, 0.600);
+/// Muted gray-white (#e3e3e3)
+pub const BUTTON_TEXT: Color = Color::srgb(0.890, 0.890, 0.890);
+
+/// Charcoal gray (#4b4b4f)
+pub const BUTTON_BACKGROUND: Color = Color::srgb(0.294, 0.294, 0.310);
+
+/// Lighter steel gray (#6a6a70)
+pub const BUTTON_HOVERED_BACKGROUND: Color = Color::srgb(0.416, 0.416, 0.439);
+
+/// Dark graphite (#343438)
+pub const BUTTON_PRESSED_BACKGROUND: Color = Color::srgb(0.204, 0.204, 0.220);

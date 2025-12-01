@@ -57,6 +57,7 @@ fn setup(mut commands: Commands) {
                 Text::default(),
                 text_style::name(),
                 Node {
+                    align_self: AlignSelf::FlexEnd,
                     margin: UiRect {
                         left: Val::Px(TEXT_BORDER_HORIZONTAL / 2.0),
                         bottom: Val::Px(-8.0),
@@ -85,7 +86,8 @@ fn setup(mut commands: Commands) {
                         ..default()
                     },
                     BackgroundColor(Color::BLACK.with_alpha(0.8)),
-                    BorderRadius::all(Val::Px(20.0)),
+                    BorderRadius::ZERO,
+                    //BorderRadius::all(Val::Px(20.0)),
                 ))
                 .with_children(|parent| {
                     // Dialog itself
@@ -96,6 +98,26 @@ fn setup(mut commands: Commands) {
                         style::standard(),
                         DialogueNode,
                         Label,
+                    ));
+
+                    parent.spawn((
+                        fmt_name("HistoryButton"),
+                        Text::new("History"),
+                        TextFont::from_font_size(30.0),
+                        TextColor(BUTTON_TEXT),
+                        Node {
+                            align_self: AlignSelf::End,
+                            margin: UiRect {
+                                right: Val::Px(-100.0),
+                                bottom: Val::Px(-50.0),
+                                ..default()
+                            },
+                            ..default()
+                        },
+                        ZIndex(1),
+                        DialogueHistoryButtonNode,
+                        Visibility::Hidden,
+                        Button,
                     ));
                 })
                 .with_children(|parent| {
@@ -114,28 +136,6 @@ fn setup(mut commands: Commands) {
                         OptionsNode,
                     ));
                 });
-
-            parent.spawn((
-                fmt_name("HistoryButton"),
-                Text::new("History"),
-                TextFont::from_font_size(30.0),
-                TextColor(BUTTON_TEXT),
-                Node {
-                    align_self: AlignSelf::End,
-                    width: Val::Px(130.0),
-                    margin: UiRect {
-                        right: Val::Px(TEXT_BORDER_HORIZONTAL / 2.0),
-                        bottom: Val::Px(-2.0),
-                        ..default()
-                    },
-                    ..default()
-                },
-                BorderColor::DEFAULT,
-                ZIndex(1),
-                DialogueHistoryButtonNode,
-                Visibility::Hidden,
-                Button,
-            ));
 
             parent.spawn((
                 fmt_name("continue indicator"),
@@ -162,7 +162,7 @@ fn setup(mut commands: Commands) {
 }
 
 pub(crate) fn fmt_name(name: &str) -> Name {
-    Name::new(format!("Yarn Spinner example dialogue view node: {name}"))
+    Name::new(format!("Yarn Spinner dialogue view node: {name}"))
 }
 
 pub(crate) fn create_dialog_text(
@@ -291,11 +291,3 @@ pub(crate) mod text_style {
         )
     }
 }
-
-// fn force_hide_dialogue(
-//     mut commands: Commands,
-//     mut root: Single<&mut Visibility, With<UiRootNode>>,
-// ) {
-//     **root = Visibility::Hidden;
-//     commands.remove_resource::<Typewriter>(); // Stop the typewriter from forcing visibility back on
-// }

@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_yarnspinner::prelude::YarnSpinnerPlugin;
 
-mod assets;
+pub(crate) mod assets;
 mod history;
 mod option_selection;
 mod setup;

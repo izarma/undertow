@@ -7,7 +7,10 @@ use bevy::{
     prelude::*,
 };
 
-use crate::theme::{interaction::InteractionPalette, palette::*};
+use crate::{
+    dialogue_view::assets::font_handle,
+    theme::{interaction::InteractionPalette, palette::*},
+};
 
 /// A root UI node that fills the window and centers its content.
 pub fn ui_root(name: impl Into<Cow<'static, str>>) -> impl Bundle {
@@ -33,7 +36,11 @@ pub fn header(text: impl Into<String>) -> impl Bundle {
     (
         Name::new("Header"),
         Text(text.into()),
-        TextFont::from_font_size(40.0),
+        TextFont {
+            font: font_handle::MEDIUM,
+            font_size: 40.0,
+            ..default()
+        },
         TextColor(HEADER_TEXT),
     )
 }
@@ -60,13 +67,15 @@ where
         action,
         (
             Node {
-                width: px(380),
-                height: px(80),
+                width: px(300),
+                height: px(60),
                 align_items: AlignItems::Center,
                 justify_content: JustifyContent::Center,
+                border: UiRect::all(Val::Px(2.0)),
                 ..default()
             },
-            BorderRadius::MAX,
+            BorderRadius::ZERO,
+            BorderColor::all(Color::BLACK),
         ),
     )
 }
@@ -112,11 +121,11 @@ where
                 .spawn((
                     Name::new("Button Inner"),
                     Button,
-                    BackgroundColor(BUTTON_BACKGROUND),
+                    BackgroundColor(BUTTON_BACKGROUND.with_alpha(0.9)),
                     InteractionPalette {
-                        none: BUTTON_BACKGROUND,
-                        hovered: BUTTON_HOVERED_BACKGROUND,
-                        pressed: BUTTON_PRESSED_BACKGROUND,
+                        none: BUTTON_BACKGROUND.with_alpha(0.9),
+                        hovered: BUTTON_HOVERED_BACKGROUND.with_alpha(0.9),
+                        pressed: BUTTON_PRESSED_BACKGROUND.with_alpha(0.9),
                     },
                     children![(
                         Name::new("Button Text"),

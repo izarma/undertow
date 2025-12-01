@@ -3,6 +3,7 @@ use bevy_yarnspinner::prelude::{YarnFileSource, YarnProject, YarnSpinnerPlugin};
 
 use crate::{
     Pause,
+    audio::sound_effect,
     demo::level::{LevelAssets, SceneBackground},
     dialogue_view::{self, YarnSpinnerDialogueViewSystemSet},
     screens::Screen,
@@ -29,7 +30,8 @@ fn spawn_dialogue_runner(mut commands: Commands, project: Res<YarnProject>) {
     let mut dialogue_runner = project.create_dialogue_runner(&mut commands);
     dialogue_runner
         .commands_mut()
-        .add_command("next_scene", commands.register_system(next_scene));
+        .add_command("next_scene", commands.register_system(next_scene))
+        .add_command("play_sfx", commands.register_system(play_sfx));
     // Immediately start showing the dialogue to the player
     dialogue_runner.start_node("Shore");
     commands.spawn((dialogue_runner, DespawnOnExit(Screen::Gameplay)));
@@ -44,5 +46,16 @@ fn next_scene(
         scene_bg.index = (scene_bg.index + 1) % level_assets.scenes.len();
         sprite.image = level_assets.scenes[scene_bg.index].clone();
         info!("Changed to scene {}", scene_bg.index);
+    }
+}
+
+fn play_sfx(In(sfx): In<String>, mut commands: Commands, res: Res<LevelAssets>) {
+    match sfx.as_str() {
+        _ => {
+            commands.spawn((
+                DespawnOnExit(Screen::Gameplay),
+                sound_effect(res.sfx.clone()),
+            ));
+        }
     }
 }

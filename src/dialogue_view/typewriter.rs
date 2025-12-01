@@ -40,7 +40,6 @@ pub(crate) struct Typewriter {
     pub(crate) graphemes_left: Vec<String>,
     pub(crate) last_before_options: bool,
     elapsed: f32,
-    start: Instant,
     fast_typing: bool,
 }
 
@@ -51,8 +50,7 @@ impl Default for Typewriter {
             current_text: default(),
             graphemes_left: default(),
             last_before_options: default(),
-            elapsed: default(),
-            start: Instant::now(),
+            elapsed: 0.0,
             fast_typing: default(),
         }
     }
@@ -69,6 +67,7 @@ impl Typewriter {
                 .map(|s| s.to_string())
                 .collect(),
             last_before_options: line.is_last_line_before_options(),
+            elapsed: 0.0,
             ..default()
         };
     }
@@ -81,12 +80,11 @@ impl Typewriter {
         self.fast_typing = true;
     }
 
-    fn update_current_text(&mut self) {
+    fn update_current_text(&mut self, delta: f32) {
         if self.is_finished() {
             return;
         }
-        self.elapsed += self.start.elapsed().as_secs_f32();
-        self.start = Instant::now();
+        self.elapsed += delta;
         let calculated_graphemes = (self.graphemes_per_second() * self.elapsed).floor() as usize;
         let graphemes_left = self.graphemes_left.len();
         let grapheme_length_to_take = (calculated_graphemes).min(graphemes_left);
@@ -107,6 +105,7 @@ fn write_text(
     option_selection: Option<Res<OptionSelection>>,
     mut speaker_change_events: MessageWriter<SpeakerChangeEvent>,
     mut root_visibility: Single<&mut Visibility, With<UiRootNode>>,
+    time: Res<Time>,
 ) {
     let mut text_entity = commands.entity(*text);
     if typewriter.last_before_options && option_selection.is_none() {
@@ -120,7 +119,7 @@ fn write_text(
         **root_visibility = Visibility::Inherited;
         // If this is last before options, the `OptionSelection` will make the visibility inherited as soon as it's ready instead
     }
-    typewriter.update_current_text();
+    typewriter.update_current_text(time.delta_secs());
     if typewriter.is_finished()
         && let Some(name) = typewriter.character_name.as_deref()
     {

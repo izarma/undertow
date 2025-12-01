@@ -37,10 +37,10 @@ fn load_image(bytes: &[u8], _path: String) -> Image {
     .unwrap()
 }
 
-pub(crate) mod font_handle {
+pub mod font_handle {
     use bevy::{asset::uuid_handle, prelude::*};
 
-    pub(crate) const MEDIUM: Handle<Font> = uuid_handle!("ee287b36-89c9-4130-914d-571038c43009");
+    pub const MEDIUM: Handle<Font> = uuid_handle!("ee287b36-89c9-4130-914d-571038c43009");
 }
 
 pub(crate) mod image_handle {
