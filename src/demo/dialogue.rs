@@ -3,8 +3,8 @@ use bevy_yarnspinner::prelude::{YarnFileSource, YarnProject, YarnSpinnerPlugin};
 
 use crate::{
     Pause,
-    audio::sound_effect,
-    demo::level::{LevelAssets, SceneBackground},
+    audio::{music, sound_effect},
+    demo::level::{GameplayMusic, LevelAssets, SceneBackground},
     dialogue_view::{self, YarnSpinnerDialogueViewSystemSet},
     screens::Screen,
 };
@@ -31,7 +31,8 @@ fn spawn_dialogue_runner(mut commands: Commands, project: Res<YarnProject>) {
     dialogue_runner
         .commands_mut()
         .add_command("next_scene", commands.register_system(next_scene))
-        .add_command("play_sfx", commands.register_system(play_sfx));
+        .add_command("play_sfx", commands.register_system(play_sfx))
+        .add_command("next_music", commands.register_system(next_music));
     // Immediately start showing the dialogue to the player
     dialogue_runner.start_node("Shore");
     commands.spawn((dialogue_runner, DespawnOnExit(Screen::Gameplay)));
@@ -58,4 +59,18 @@ fn play_sfx(In(sfx): In<String>, mut commands: Commands, res: Res<LevelAssets>) 
             ));
         }
     }
+}
+
+fn next_music(
+    assets: Res<LevelAssets>,
+    music_query: Single<Entity, With<GameplayMusic>>,
+    mut cmd: Commands,
+) {
+    cmd.entity(music_query.entity()).despawn();
+    cmd.spawn((
+        Name::new("Gameplay Music"),
+        music(assets.music2.clone()),
+        GameplayMusic,
+        DespawnOnExit(Screen::Gameplay),
+    ));
 }

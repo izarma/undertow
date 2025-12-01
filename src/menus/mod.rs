@@ -28,3 +28,6 @@ pub enum Menu {
     History,
     Pause,
 }
+
+#[derive(Resource, Default)]
+pub struct GameEnded(pub bool);

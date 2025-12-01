@@ -85,7 +85,7 @@ fn setup(mut commands: Commands) {
                         },
                         ..default()
                     },
-                    BackgroundColor(Color::BLACK.with_alpha(0.8)),
+                    BackgroundColor(Color::BLACK.with_alpha(0.95)),
                     BorderRadius::ZERO,
                     //BorderRadius::all(Val::Px(20.0)),
                 ))

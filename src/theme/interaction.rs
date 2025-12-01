@@ -4,29 +4,11 @@ use crate::{asset_tracking::LoadResource, audio::sound_effect};
 
 pub(super) fn plugin(app: &mut App) {
     app.add_systems(Update, apply_interaction_palette);
-    app.load_resource::<MenuAssets>();
     app.load_resource::<InteractionAssets>();
     app.add_observer(play_on_hover_sound_effect);
     app.add_observer(play_on_click_sound_effect);
 }
 
-#[derive(Resource, Asset, Clone, Reflect)]
-#[reflect(Resource)]
-pub(crate) struct MenuAssets {
-    #[dependency]
-    pub(crate) menu_font: Handle<Font>,
-    pub(crate) menu_bg: Handle<Image>,
-}
-
-impl FromWorld for MenuAssets {
-    fn from_world(world: &mut World) -> Self {
-        let assets = world.resource::<AssetServer>();
-        Self {
-            menu_font: assets.load("dialogue/Granite-Bgvl.ttf"),
-            menu_bg: assets.load("images/scenes/menu-theme.png"),
-        }
-    }
-}
 /// Palette for widget interactions. Add this to an entity that supports
 /// [`Interaction`]s, such as a button, to change its [`BackgroundColor`] based
 /// on the current interaction state.

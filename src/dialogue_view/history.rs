@@ -13,10 +13,7 @@ use bevy::{
 };
 
 use crate::{
-    dialogue_view::setup::text_style,
-    menus::Menu,
-    screens::gameplay,
-    theme::{interaction::MenuAssets, widget},
+    MenuAssets, dialogue_view::setup::text_style, menus::Menu, screens::gameplay, theme::widget,
 };
 
 #[derive(Resource, Default)]

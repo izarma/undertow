@@ -3,8 +3,10 @@ use bevy::prelude::*;
 /// Warm paper-ink beige (#d8d4ba)
 pub const LABEL_TEXT: Color = Color::srgb(0.847, 0.831, 0.729);
 
+//pub const HEADER_TEXT: Color = Color::srgb(0.40, 0.40, 0.40); // #666666
+
 /// Soft parchment highlight (#f2f0dd)
-pub const HEADER_TEXT: Color = Color::srgb(0.949, 0.941, 0.866);
+pub const HEADER_TEXT: Color = Color::srgb(0.749, 0.741, 0.666);
 
 /// Muted gray-white (#e3e3e3)
 pub const BUTTON_TEXT: Color = Color::srgb(0.890, 0.890, 0.890);

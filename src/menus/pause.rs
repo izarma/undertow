@@ -3,10 +3,11 @@
 use bevy::{input::common_conditions::input_just_pressed, prelude::*};
 
 use crate::{
+    MenuAssets,
     dialogue_view::history::DialogueHistory,
     menus::{Menu, main::open_settings_menu},
     screens::Screen,
-    theme::{interaction::MenuAssets, widget},
+    theme::widget,
 };
 
 pub(super) fn plugin(app: &mut App) {

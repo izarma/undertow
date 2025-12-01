@@ -14,6 +14,8 @@ pub struct LevelAssets {
     #[dependency]
     music: Handle<AudioSource>,
     #[dependency]
+    pub music2: Handle<AudioSource>,
+    #[dependency]
     pub scenes: Vec<Handle<Image>>,
     #[dependency]
     pub sfx: Handle<AudioSource>,
@@ -23,7 +25,8 @@ impl FromWorld for LevelAssets {
     fn from_world(world: &mut World) -> Self {
         let assets = world.resource::<AssetServer>();
         Self {
-            music: assets.load("audio/music/Fluffing A Duck.ogg"),
+            music: assets.load("audio/music/chapter0.ogg"),
+            music2: assets.load("audio/music/cc_we-will-be-loyal-through-generations-synth.ogg"),
             scenes: vec![
                 assets.load("images/scenes/scene1.png"),
                 assets.load("images/scenes/scene2.png"),
@@ -47,12 +50,12 @@ pub fn spawn_level(mut commands: Commands, level_assets: Res<LevelAssets>) {
         Transform::default(),
         Visibility::default(),
         DespawnOnExit(Screen::Gameplay),
-        GameplayMusic,
         children![
             scene(&level_assets),
             (
                 Name::new("Gameplay Music"),
-                music(level_assets.music.clone())
+                music(level_assets.music.clone()),
+                GameplayMusic,
             )
         ],
     ));

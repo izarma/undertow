@@ -71,7 +71,7 @@ impl Plugin for AppPlugin {
         // Set up the `Pause` state.
         app.init_state::<Pause>();
         app.configure_sets(Update, PausableSystems.run_if(in_state(Pause(false))));
-
+        app.insert_resource(ClearColor(Color::srgb(0.0, 0.0, 0.0)));
         // Spawn the main camera.
         app.add_systems(Startup, spawn_camera);
     }
@@ -108,4 +108,20 @@ fn spawn_camera(mut commands: Commands) {
         ..OrthographicProjection::default_2d()
     });
     commands.spawn((Name::new("Camera"), main_camera, projection));
+}
+
+#[derive(Resource, Asset, Clone, Reflect)]
+#[reflect(Resource)]
+pub(crate) struct MenuAssets {
+    #[dependency]
+    pub(crate) menu_font: Handle<Font>,
+}
+
+impl FromWorld for MenuAssets {
+    fn from_world(world: &mut World) -> Self {
+        let assets = world.resource::<AssetServer>();
+        Self {
+            menu_font: assets.load("dialogue/Granite-Bgvl.ttf"),
+        }
+    }
 }

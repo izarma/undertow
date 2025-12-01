@@ -5,7 +5,7 @@ use bevy_yarnspinner::{
 };
 
 use crate::{
-    demo::level::GameplayMusic,
+    demo::level::{GameplayMusic, SceneBackground},
     dialogue_view::{
         YarnSpinnerDialogueViewSystemSet,
         history::DialogueHistory,
@@ -13,9 +13,7 @@ use crate::{
         setup::{DialogueContinueNode, DialogueHistoryButtonNode, DialogueNameNode, UiRootNode},
         typewriter::{self, Typewriter},
     },
-    menus::Menu,
-    screens::Screen,
-    theme::interaction::MenuAssets,
+    menus::{GameEnded, Menu},
 };
 
 pub(super) fn ui_updating_plugin(app: &mut App) {
@@ -75,21 +73,17 @@ fn hide_dialog(
     mut next_menu: ResMut<NextState<Menu>>,
     mut history: ResMut<DialogueHistory>,
     music_query: Single<Entity, With<GameplayMusic>>,
+    scene_query: Single<Entity, With<SceneBackground>>,
     mut cmd: Commands,
-    assets: Res<MenuAssets>,
+    mut ended: ResMut<GameEnded>,
 ) {
     if !dialogue_complete_events.is_empty() {
         **root_visibility = Visibility::Hidden;
         cmd.entity(music_query.entity()).despawn();
+        cmd.entity(scene_query.entity()).despawn();
         next_menu.set(Menu::Credits);
-        cmd.spawn((
-            DespawnOnEnter(Screen::Title),
-            ImageNode {
-                image: assets.menu_bg.clone(),
-                ..default()
-            },
-        ));
         history.lines.clear();
+        ended.0 = true;
         dialogue_complete_events.clear();
     }
 }

@@ -4,11 +4,7 @@
 
 use bevy::{audio::Volume, input::common_conditions::input_just_pressed, prelude::*};
 
-use crate::{
-    menus::Menu,
-    screens::Screen,
-    theme::{interaction::MenuAssets, prelude::*},
-};
+use crate::{MenuAssets, menus::Menu, screens::Screen, theme::prelude::*};
 
 pub(super) fn plugin(app: &mut App) {
     app.add_systems(OnEnter(Menu::Settings), spawn_settings_menu);

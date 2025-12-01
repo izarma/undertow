@@ -3,11 +3,7 @@
 use bevy::{ecs::spawn::SpawnIter, input::common_conditions::input_just_pressed, prelude::*};
 
 use crate::{
-    asset_tracking::LoadResource,
-    audio::music,
-    menus::Menu,
-    screens::Screen,
-    theme::{interaction::MenuAssets, prelude::*},
+    MenuAssets, asset_tracking::LoadResource, menus::Menu, screens::Screen, theme::prelude::*,
 };
 
 pub(super) fn plugin(app: &mut App) {
@@ -18,7 +14,6 @@ pub(super) fn plugin(app: &mut App) {
     );
 
     app.load_resource::<CreditsAssets>();
-    app.add_systems(OnEnter(Menu::Credits), start_credits_music);
 }
 
 fn spawn_credits_menu(mut commands: Commands, font: Res<MenuAssets>) {
@@ -106,12 +101,4 @@ impl FromWorld for CreditsAssets {
             music: assets.load("audio/music/cc_we-will-be-loyal-through-generations-synth.ogg"),
         }
     }
-}
-
-fn start_credits_music(mut commands: Commands, credits_music: Res<CreditsAssets>) {
-    commands.spawn((
-        Name::new("Credits Music"),
-        DespawnOnExit(Menu::Credits),
-        music(credits_music.music.clone()),
-    ));
 }
