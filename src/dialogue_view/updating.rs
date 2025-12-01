@@ -88,18 +88,16 @@ fn present_line(
     mut history: ResMut<DialogueHistory>,
 ) {
     for event in line_events.read() {
-        let mut line_text_hist = event.line.text.clone();
         let name = if let Some(name) = event.line.character_name() {
             speaker_change_events.write(SpeakerChangeEvent {
                 character_name: name.to_string(),
                 speaking: true,
             });
-            line_text_hist = format!("{}: {}", name, line_text_hist);
             name.to_string()
         } else {
             String::new()
         };
-        history.lines.push(line_text_hist);
+        history.lines.push(event.line.text.clone());
         *text_writer.text(*name_node, 0) = name;
         typewriter.set_line(&event.line);
     }

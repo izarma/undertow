@@ -1,13 +1,18 @@
 use bevy::{
     ecs::relationship::RelatedSpawner,
     input::common_conditions::input_just_pressed,
-    input_focus::tab_navigation::TabGroup,
+    input_focus::{
+        InputDispatchPlugin,
+        tab_navigation::{TabGroup, TabNavigationPlugin},
+    },
     picking::hover::Hovered,
     prelude::*,
-    ui_widgets::{ControlOrientation, CoreScrollbarDragState, CoreScrollbarThumb, Scrollbar},
+    ui_widgets::{
+        ControlOrientation, CoreScrollbarDragState, CoreScrollbarThumb, Scrollbar, ScrollbarPlugin,
+    },
 };
 
-use crate::{menus::Menu, screens::gameplay, theme::widget};
+use crate::{dialogue_view::setup::text_style, menus::Menu, screens::gameplay, theme::widget};
 
 #[derive(Resource, Default)]
 pub struct DialogueHistory {
@@ -18,6 +23,8 @@ pub struct DialogueHistory {
 pub struct HistoryMenuRoot;
 
 pub(super) fn plugin(app: &mut App) {
+    app.add_plugins((ScrollbarPlugin, InputDispatchPlugin, TabNavigationPlugin));
+
     // Systems for the new menu state
     app.add_systems(
         OnEnter(Menu::History),
@@ -114,7 +121,7 @@ fn load_scroller(history: Res<DialogueHistory>) -> impl Bundle {
                         ..default()
                     },
                     Hovered::default(),
-                    BackgroundColor(Color::srgb(0.9, 0.1, 0.1)),
+                    BackgroundColor(Color::WHITE.with_alpha(0.9)),
                     BorderRadius::all(px(4)),
                     CoreScrollbarThumb,
                 ))),
@@ -138,13 +145,7 @@ fn history_line(caption: &str) -> impl Bundle {
             ..default()
         },
         Interaction::None,
-        Children::spawn(Spawn((
-            Text::new(caption),
-            TextFont {
-                font_size: 16.0,
-                ..default()
-            },
-        ))),
+        Children::spawn(Spawn((Text::new(caption), text_style::standard()))),
     )
 }
 
@@ -161,10 +162,10 @@ fn update_scrollbar_thumb(
     for (mut thumb_bg, Hovered(is_hovering), drag) in q_thumb.iter_mut() {
         let color: Color = if *is_hovering || drag.dragging {
             // If hovering, use a lighter color
-            Color::srgb(0.7, 0.1, 0.1)
+            Color::WHITE.with_alpha(0.4)
         } else {
             // Default color for the slider
-            Color::srgb(0.9, 0.1, 0.1)
+            Color::WHITE.with_alpha(0.9)
         }
         .into();
 

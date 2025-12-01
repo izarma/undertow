@@ -245,7 +245,7 @@ mod style {
     }
 }
 
-mod text_style {
+pub(crate) mod text_style {
     use crate::dialogue_view::assets::font_handle;
 
     use super::*;

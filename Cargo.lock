@@ -4983,7 +4983,6 @@ dependencies = [
  "bevy",
  "bevy_yarnspinner",
  "getrandom",
- "rand",
  "tracing",
  "unicode-segmentation",
 ]
