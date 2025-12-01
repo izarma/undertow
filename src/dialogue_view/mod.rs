@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use bevy_yarnspinner::prelude::YarnSpinnerPlugin;
 
 pub(crate) mod assets;
-mod history;
+pub(crate) mod history;
 mod option_selection;
 mod setup;
 mod typewriter;

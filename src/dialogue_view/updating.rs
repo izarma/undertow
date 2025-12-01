@@ -14,6 +14,8 @@ use crate::{
         typewriter::{self, Typewriter},
     },
     menus::Menu,
+    screens::Screen,
+    theme::interaction::MenuAssets,
 };
 
 pub(super) fn ui_updating_plugin(app: &mut App) {
@@ -61,7 +63,6 @@ fn dialogue_history_button(
     for interaction in interaction_query.iter() {
         **visibility = Visibility::Inherited;
         if *interaction == Interaction::Pressed {
-            // TODO: Toggle history panel visibility
             info!("History button pressed!");
             next_menu.set(Menu::History);
         }
@@ -75,11 +76,19 @@ fn hide_dialog(
     mut history: ResMut<DialogueHistory>,
     music_query: Single<Entity, With<GameplayMusic>>,
     mut cmd: Commands,
+    assets: Res<MenuAssets>,
 ) {
     if !dialogue_complete_events.is_empty() {
         **root_visibility = Visibility::Hidden;
         cmd.entity(music_query.entity()).despawn();
         next_menu.set(Menu::Credits);
+        cmd.spawn((
+            DespawnOnEnter(Screen::Title),
+            ImageNode {
+                image: assets.menu_bg.clone(),
+                ..default()
+            },
+        ));
         history.lines.clear();
         dialogue_complete_events.clear();
     }

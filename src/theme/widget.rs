@@ -7,10 +7,7 @@ use bevy::{
     prelude::*,
 };
 
-use crate::{
-    dialogue_view::assets::font_handle,
-    theme::{interaction::InteractionPalette, palette::*},
-};
+use crate::theme::{interaction::InteractionPalette, palette::*};
 
 /// A root UI node that fills the window and centers its content.
 pub fn ui_root(name: impl Into<Cow<'static, str>>) -> impl Bundle {
@@ -32,12 +29,12 @@ pub fn ui_root(name: impl Into<Cow<'static, str>>) -> impl Bundle {
 }
 
 /// A simple header label. Bigger than [`label`].
-pub fn header(text: impl Into<String>) -> impl Bundle {
+pub fn header(text: impl Into<String>, font: Handle<Font>) -> impl Bundle {
     (
         Name::new("Header"),
         Text(text.into()),
         TextFont {
-            font: font_handle::MEDIUM,
+            font: font,
             font_size: 40.0,
             ..default()
         },

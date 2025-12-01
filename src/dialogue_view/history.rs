@@ -12,7 +12,12 @@ use bevy::{
     },
 };
 
-use crate::{dialogue_view::setup::text_style, menus::Menu, screens::gameplay, theme::widget};
+use crate::{
+    dialogue_view::setup::text_style,
+    menus::Menu,
+    screens::gameplay,
+    theme::{interaction::MenuAssets, widget},
+};
 
 #[derive(Resource, Default)]
 pub struct DialogueHistory {
@@ -47,7 +52,11 @@ pub(super) fn plugin(app: &mut App) {
     app.init_resource::<DialogueHistory>();
 }
 
-fn spawn_history_menu(mut commands: Commands, history: Res<DialogueHistory>) {
+fn spawn_history_menu(
+    mut commands: Commands,
+    history: Res<DialogueHistory>,
+    font: Res<MenuAssets>,
+) {
     commands.spawn((
         GlobalZIndex(3),
         DespawnOnExit(Menu::History),
@@ -65,7 +74,7 @@ fn spawn_history_menu(mut commands: Commands, history: Res<DialogueHistory>) {
         },
         BackgroundColor(Color::BLACK.with_alpha(0.8)),
         Children::spawn(((
-            Spawn(widget::header("History")),
+            Spawn(widget::header("History", font.menu_font.clone())),
             Spawn(load_scroller(history)),
             Spawn(widget::button("Back", go_back_to_gameplay_on_click)),
         ),)),
@@ -137,7 +146,7 @@ fn history_line(caption: &str) -> impl Bundle {
         Button,
         Node {
             width: Val::Percent(100.0),
-            min_height: Val::Px(70.0),
+            min_height: Val::Px(90.0),
             display: Display::Flex,
             align_items: AlignItems::Center,
             justify_content: JustifyContent::FlexStart,

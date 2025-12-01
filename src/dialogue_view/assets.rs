@@ -8,7 +8,7 @@ pub(super) fn ui_assets_plugin(app: &mut App) {
     load_internal_binary_asset!(
         app,
         font_handle::MEDIUM,
-        "../../assets/dialogue/Granite-Bgvl.ttf",
+        "../../assets/dialogue/Girls Have Many Secrets.ttf",
         load_font
     );
 

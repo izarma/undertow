@@ -4,7 +4,11 @@
 
 use bevy::{audio::Volume, input::common_conditions::input_just_pressed, prelude::*};
 
-use crate::{menus::Menu, screens::Screen, theme::prelude::*};
+use crate::{
+    menus::Menu,
+    screens::Screen,
+    theme::{interaction::MenuAssets, prelude::*},
+};
 
 pub(super) fn plugin(app: &mut App) {
     app.add_systems(OnEnter(Menu::Settings), spawn_settings_menu);
@@ -19,13 +23,13 @@ pub(super) fn plugin(app: &mut App) {
     );
 }
 
-fn spawn_settings_menu(mut commands: Commands) {
+fn spawn_settings_menu(mut commands: Commands, font: Res<MenuAssets>) {
     commands.spawn((
         widget::ui_root("Settings Menu"),
         GlobalZIndex(2),
         DespawnOnExit(Menu::Settings),
         children![
-            widget::header("Settings"),
+            widget::header("Settings", font.menu_font.clone()),
             settings_grid(),
             widget::button("Back", go_back_on_click),
         ],

@@ -60,7 +60,7 @@ fn setup(mut commands: Commands) {
                     align_self: AlignSelf::FlexEnd,
                     margin: UiRect {
                         left: Val::Px(TEXT_BORDER_HORIZONTAL / 2.0),
-                        bottom: Val::Px(-8.0),
+                        bottom: Val::Px(-20.0),
                         ..default()
                     },
                     ..default()
@@ -222,7 +222,7 @@ where
     });
 }
 
-const DIALOG_WIDTH: f32 = 800.0 * 0.8;
+const DIALOG_WIDTH: f32 = 800.0;
 const TEXT_BORDER_HORIZONTAL: f32 = 120.0;
 const TEXT_BORDER_TOP: f32 = 30.0;
 const TEXT_BORDER_BOTTOM: f32 = TEXT_BORDER_TOP + 10.0;
@@ -254,7 +254,7 @@ pub(crate) mod text_style {
         (
             TextFont {
                 font: font_handle::MEDIUM,
-                font_size: 20.0,
+                font_size: 28.0,
                 ..default()
             },
             TextColor(Color::WHITE),
@@ -264,7 +264,7 @@ pub(crate) mod text_style {
         (
             TextFont {
                 font: font_handle::MEDIUM,
-                font_size: 18.0,
+                font_size: 30.0,
                 ..standard().0
             },
             standard().1,
